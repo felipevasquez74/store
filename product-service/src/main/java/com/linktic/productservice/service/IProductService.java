@@ -5,16 +5,19 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.linktic.productservice.dto.ProductDto;
+import com.linktic.productservice.dto.ProductAttributes;
+import com.linktic.productservice.model.JsonApiRequest;
+import com.linktic.productservice.model.JsonApiResponse;
 
 public interface IProductService {
-	ProductDto create(ProductDto dto);
 
-	Optional<ProductDto> getById(String id);
+    JsonApiResponse<ProductAttributes> create(JsonApiRequest<ProductAttributes> request);
 
-	Optional<ProductDto> update(String id, ProductDto dto);
+    Optional<JsonApiResponse<ProductAttributes>> getById(String id);
 
-	void delete(String id);
+    Optional<JsonApiResponse<ProductAttributes>> update(String id, JsonApiRequest<ProductAttributes> request);
 
-	Page<ProductDto> list(Pageable pageable);
+    void delete(String id);
+
+    Page<JsonApiResponse<ProductAttributes>> list(Pageable pageable);
 }
