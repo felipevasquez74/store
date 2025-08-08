@@ -22,4 +22,16 @@
 		<module>product-service</module>
 		<module>inventary-service</module>
 	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.katharsis</groupId>
+			<artifactId>katharsis-spring</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+	</dependencies>
 </project>
