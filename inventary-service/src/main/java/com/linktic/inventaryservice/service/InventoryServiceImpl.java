@@ -6,7 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.linktic.inventaryservice.dto.ProductAttributes;
 import com.linktic.inventaryservice.entity.Inventory;
 import com.linktic.inventaryservice.exception.ResourceNotFoundException;
-import com.linktic.inventaryservice.integration.ProductClient;
+import com.linktic.inventaryservice.integration.feign.ProductClient;
+import com.linktic.inventaryservice.integration.messageBroker.EventPublisher;
 import com.linktic.inventaryservice.model.InventoryJsonApiResponse;
 import com.linktic.inventaryservice.model.JsonApiResponse;
 import com.linktic.inventaryservice.repository.InventoryRepository;
@@ -24,10 +25,13 @@ public class InventoryServiceImpl implements IInventoryService {
 
 	private final InventoryRepository repository;
 	private final ProductClient productClient;
+	private final EventPublisher eventPublisher;
 
-	public InventoryServiceImpl(InventoryRepository repository, ProductClient productClient) {
+	public InventoryServiceImpl(InventoryRepository repository, ProductClient productClient,
+			EventPublisher eventPublisher) {
 		this.repository = repository;
 		this.productClient = productClient;
+		this.eventPublisher = eventPublisher;
 	}
 
 	@Override
@@ -91,6 +95,7 @@ public class InventoryServiceImpl implements IInventoryService {
 		repository.save(inventory);
 		log.info("Inventory updated successfully for productId={}, newQuantity={}", productId, newQuantity);
 
+		eventPublisher.publishInventoryChanged(productId, newQuantity);
 		JsonApiResponse<ProductAttributes> productResponse;
 		try {
 			productResponse = productClient.getByProductById(productId);

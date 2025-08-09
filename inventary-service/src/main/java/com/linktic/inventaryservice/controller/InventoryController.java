@@ -40,7 +40,7 @@ public class InventoryController {
 	@Operation(summary = "Update product quantity", description = "Updates the quantity of a product after purchase")
 	@ApiResponse(responseCode = "200", description = "Product quantity update successfully")
 	@ApiResponse(responseCode = "400", description = "Invalid input data")
-	@PostMapping(path = "/{productId}/purchase", consumes = MediaTypes.JSON_API_VALUE)
+	@PostMapping(path = "/{productId}/purchase")
 	public ResponseEntity<InventoryJsonApiResponse> updateAfterPurchase(@PathVariable String productId,
 			@RequestParam int quantity) {
 		return ResponseEntity.ok(iInventoryService.updateQuantityAfterPurchase(productId, quantity));
