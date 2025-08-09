@@ -28,3 +28,10 @@ management:
   endpoint:
     health:
       show-details: always
+logging:
+  level:
+    com.linktic: DEBUG       
+    feign: DEBUG            
+    org.apache.http: WARN   
+    feign.retry.Retryer: DEBUG
+    feign.Client: DEBUG

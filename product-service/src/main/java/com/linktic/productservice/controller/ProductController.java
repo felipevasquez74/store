@@ -69,7 +69,6 @@ public class ProductController {
 			@Valid @RequestBody JsonApiRequest<ProductAttributes> request) {
 		JsonApiResponse<ProductAttributes> updatedProduct = iProductService.update(id,
 				request.getData().getAttributes());
-
 		return ResponseEntity.ok(updatedProduct);
 	}
 
