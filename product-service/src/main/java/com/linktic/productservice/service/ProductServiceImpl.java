@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductServiceImpl implements IProductService {
 
 	private static final String RESOURCE_NAME = "products";
+	private static final String PRODUCT_NOT_FOUND = "The product with ID '%s' was not found.";
 
 	private final ProductRepository productRepository;
 	private final ProductMapper productMapper;
@@ -52,10 +53,10 @@ public class ProductServiceImpl implements IProductService {
 	public JsonApiResponse<ProductAttributes> getById(String id) {
 		log.info("Getting product by ID: {}", id);
 
-		Product product = productRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException(String.format("The product with ID '%s' was not found.", id)));
+		Product product = productRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND, id)));
 
-		log.debug("Product found: {}", product.getId());
+		log.info("Product found: {}", product.getId());
 		return wrapResponse(product);
 	}
 
@@ -64,14 +65,14 @@ public class ProductServiceImpl implements IProductService {
 	public JsonApiResponse<ProductAttributes> update(String id, ProductAttributes productAttributes) {
 		log.info("Updating product with ID: {}", id);
 
-		Product product = productRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException(String.format("The product with ID '%s' was not found.", id)));
+		Product product = productRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND, id)));
 
 		product.setName(productAttributes.getName());
 		product.setPrice(productAttributes.getPrice());
 
 		Product updated = productRepository.save(product);
-		log.debug("Product updated: {}", updated.getId());
+		log.info("Product updated: {}", updated.getId());
 
 		return wrapResponse(updated);
 	}
@@ -80,8 +81,8 @@ public class ProductServiceImpl implements IProductService {
 	@Transactional
 	public void delete(String id) {
 		log.info("Deleting product with ID: {}", id);
-		Product product = productRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException(String.format("The product with ID '%s' was not found.", id)));
+		Product product = productRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND, id)));
 		log.info("Product with ID {} deleted successfully", id);
 		productRepository.delete(product);
 	}
@@ -94,7 +95,7 @@ public class ProductServiceImpl implements IProductService {
 		Page<JsonApiResponse<ProductAttributes>> pageResult = productRepository.findAll(pageable)
 				.map(this::wrapResponse);
 
-		log.debug("Products returned: {}", pageResult.getTotalElements());
+		log.info("Products returned: {}", pageResult.getTotalElements());
 
 		return new JsonApiListResponse<>(pageResult.getContent(),
 				new MetaPage(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(),
