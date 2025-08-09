@@ -1,6 +1,9 @@
 package com.linktic.inventaryservice.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.linktic.inventaryservice.dto.ProductAttributes;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,19 +13,38 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InventoryJsonApiResponse {
+	
+	private static final String INVENTORIES = "inventories";
+	private static final String PRODUCTS = "products";
+	
     private Data data;
+    private List<IncludedProduct> included;
 
     public InventoryJsonApiResponse(String productId, Integer quantity) {
+        this.data = new Data(
+            productId,
+            INVENTORIES,
+            new Attributes(quantity),
+            new Relationships(
+                new RelationshipData(
+                    new RelationshipData.DataInner(productId, PRODUCTS)
+                )
+            )
+        );
+    }
+
+    public InventoryJsonApiResponse(String productId, Integer quantity, ProductAttributes productAttributes) {
         this.data = new Data(
             productId,
             "inventories",
             new Attributes(quantity),
             new Relationships(
                 new RelationshipData(
-                    new RelationshipData.DataInner(productId, "products")
+                    new RelationshipData.DataInner(productId, PRODUCTS)
                 )
             )
         );
+        this.included = List.of(new IncludedProduct(productId, PRODUCTS, productAttributes));
     }
 
     @lombok.Data
@@ -30,7 +52,7 @@ public class InventoryJsonApiResponse {
     @NoArgsConstructor
     public static class Data {
         private String id;
-        private String type = "inventories";
+        private String type = INVENTORIES;
         private Attributes attributes;
         private Relationships relationships;
     }
@@ -60,7 +82,16 @@ public class InventoryJsonApiResponse {
         @NoArgsConstructor
         public static class DataInner {
             private String id;
-            private String type = "products";
+            private String type = PRODUCTS;
         }
+    }
+
+    @lombok.Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class IncludedProduct {
+        private String id;
+        private String type = PRODUCTS;
+        private ProductAttributes attributes;
     }
 }

@@ -34,8 +34,7 @@ public class InventoryController {
 	@ApiResponse(responseCode = "404", description = "Product not found")
 	@GetMapping("/{productId}")
 	public ResponseEntity<InventoryJsonApiResponse> getQuantity(@PathVariable String productId) {
-		InventoryJsonApiResponse response = iInventoryService.getInventoryByProductId(productId);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(iInventoryService.getInventoryByProductId(productId));
 	}
 
 	@Operation(summary = "Update product quantity", description = "Updates the quantity of a product after purchase")
@@ -44,7 +43,6 @@ public class InventoryController {
 	@PostMapping(path = "/{productId}/purchase", consumes = MediaTypes.JSON_API_VALUE)
 	public ResponseEntity<InventoryJsonApiResponse> updateAfterPurchase(@PathVariable String productId,
 			@RequestParam int quantity) {
-		InventoryJsonApiResponse response = iInventoryService.updateQuantityAfterPurchase(productId, quantity);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(iInventoryService.updateQuantityAfterPurchase(productId, quantity));
 	}
 }

@@ -16,6 +16,7 @@ import com.linktic.productservice.model.JsonApiResponse.JsonApiData;
 import com.linktic.productservice.model.Links;
 import com.linktic.productservice.model.MetaPage;
 import com.linktic.productservice.repository.ProductRepository;
+import com.linktic.productservice.util.MDCLoggingFilter;
 import com.linktic.productservice.util.ProductMapper;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -38,12 +39,15 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public JsonApiResponse<ProductAttributes> create(JsonApiRequest<ProductAttributes> request) {
+		MDCLoggingFilter.builderMDC();
+
 		log.info("Creating new product with attributes: {}", request.getData().getAttributes());
 		Product product = productMapper.toEntity(request.getData().getAttributes());
 		product.setId(UUID.randomUUID().toString());
 
 		Product savedProduct = productRepository.save(product);
 		log.info("Product created successfully with ID: {}", savedProduct.getId());
+		log.debug("Created product details: {}", savedProduct);
 
 		return wrapResponse(savedProduct);
 	}
@@ -51,18 +55,22 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	@Transactional(readOnly = true)
 	public JsonApiResponse<ProductAttributes> getById(String id) {
-		log.info("Getting product by ID: {}", id);
+		MDCLoggingFilter.builderMDC();
+
+		log.debug("Attempting to get product by ID: {}", id);
 
 		Product product = productRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND, id)));
 
-		log.info("Product found: {}", product.getId());
+		log.info("Product retrieved with ID: {}", id);
 		return wrapResponse(product);
 	}
 
 	@Override
 	@Transactional
 	public JsonApiResponse<ProductAttributes> update(String id, ProductAttributes productAttributes) {
+		MDCLoggingFilter.builderMDC();
+
 		log.info("Updating product with ID: {}", id);
 
 		Product product = productRepository.findById(id)
@@ -72,7 +80,8 @@ public class ProductServiceImpl implements IProductService {
 		product.setPrice(productAttributes.getPrice());
 
 		Product updated = productRepository.save(product);
-		log.info("Product updated: {}", updated.getId());
+		log.info("Product updated with ID: {}", updated.getId());
+		log.debug("Updated product details: {}", updated);
 
 		return wrapResponse(updated);
 	}
@@ -80,22 +89,28 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	@Transactional
 	public void delete(String id) {
+		MDCLoggingFilter.builderMDC();
+
 		log.info("Deleting product with ID: {}", id);
+
 		Product product = productRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException(String.format(PRODUCT_NOT_FOUND, id)));
-		log.info("Product with ID {} deleted successfully", id);
 		productRepository.delete(product);
+		log.info("Product with ID {} deleted successfully", id);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public JsonApiListResponse<ProductAttributes> list(Pageable pageable) {
+		MDCLoggingFilter.builderMDC();
+
 		log.info("Listing products. Page: {}, Size: {}", pageable.getPageNumber(), pageable.getPageSize());
 
 		Page<JsonApiResponse<ProductAttributes>> pageResult = productRepository.findAll(pageable)
 				.map(this::wrapResponse);
 
-		log.info("Products returned: {}", pageResult.getTotalElements());
+		log.info("Returned {} products total in current query", pageResult.getTotalElements());
+		log.debug("Page info: current page={}, total pages={}", pageResult.getNumber(), pageResult.getTotalPages());
 
 		return new JsonApiListResponse<>(pageResult.getContent(),
 				new MetaPage(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(),
