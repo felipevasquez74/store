@@ -7,13 +7,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -106,5 +106,42 @@ class ProductServiceImplTest {
 		var result = productService.list(Pageable.ofSize(10));
 
 		assertEquals(1, result.getData().size());
+	}
+
+	@Test
+	void delete_shouldRemoveProduct_whenExists() {
+		when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
+
+		productService.delete(product.getId());
+
+		verify(productRepository).delete(product);
+	}
+
+	@Test
+	void delete_shouldThrow_whenNotFound() {
+		when(productRepository.findById(anyString())).thenReturn(Optional.empty());
+
+		assertThrows(EntityNotFoundException.class, () -> productService.delete("no-id"));
+	}
+
+	@Test
+	void update_shouldThrow_whenNotFound() {
+		when(productRepository.findById(anyString())).thenReturn(Optional.empty());
+		assertThrows(EntityNotFoundException.class, () -> productService.update("no-id", attributes));
+	}
+
+	@Test
+	void create_shouldThrow_whenAttributesNull() {
+		JsonApiRequest<ProductAttributes> request = new JsonApiRequest<>();
+		request.setData(new JsonApiData<>("products", null, null));
+		assertThrows(NullPointerException.class, () -> productService.create(request));
+	}
+	
+	@Test
+	void list_shouldReturnEmpty_whenNoProducts() {
+	    when(productRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
+	    var result = productService.list(Pageable.ofSize(10));
+	    assertNotNull(result);
+	    assertEquals(0, result.getData().size());
 	}
 }
