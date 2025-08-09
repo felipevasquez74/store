@@ -1,5 +1,6 @@
 server:
   port: 8080
+
 service:
   api:
     key: S3CR3T_K3Y
@@ -23,4 +24,3 @@ management:
   endpoint:
     health:
       show-details: always
-        
