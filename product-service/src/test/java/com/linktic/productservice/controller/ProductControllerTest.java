@@ -55,7 +55,7 @@ class ProductControllerTest {
 	void create_shouldReturn200() throws Exception {
 		when(productService.create(any())).thenReturn(response);
 
-		mockMvc.perform(post("/v1/product").header("X-API-KEY", "S3CR3T_K3Y").contentType("application/vnd.api+json")
+		mockMvc.perform(post("/v1/product").header("X-API-KEY", "S3CR3T_K3Y_PR0DUCT_S3RV1C3").contentType("application/vnd.api+json")
 				.content(new ObjectMapper().writeValueAsString(request))).andExpect(status().isOk())
 				.andExpect(jsonPath("$.data.attributes.name").value("Test Product"));
 	}
@@ -64,7 +64,7 @@ class ProductControllerTest {
 	void getById_shouldReturn200() throws Exception {
 		when(productService.getById("1")).thenReturn(response);
 
-		mockMvc.perform(get("/v1/product/1").header("X-API-KEY", "S3CR3T_K3Y")).andExpect(status().isOk())
+		mockMvc.perform(get("/v1/product/1").header("X-API-KEY", "S3CR3T_K3Y_PR0DUCT_S3RV1C3")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.data.attributes.name").value("Test Product"));
 	}
 
@@ -72,14 +72,14 @@ class ProductControllerTest {
 	void update_shouldReturn200() throws Exception {
 		when(productService.update(eq("1"), any())).thenReturn(response);
 
-		mockMvc.perform(put("/v1/product/1").header("X-API-KEY", "S3CR3T_K3Y").contentType("application/vnd.api+json")
+		mockMvc.perform(put("/v1/product/1").header("X-API-KEY", "S3CR3T_K3Y_PR0DUCT_S3RV1C3").contentType("application/vnd.api+json")
 				.content(new ObjectMapper().writeValueAsString(request))).andExpect(status().isOk())
 				.andExpect(jsonPath("$.data.attributes.name").value("Test Product"));
 	}
 
 	@Test
 	void delete_shouldReturn204() throws Exception {
-		mockMvc.perform(delete("/v1/product/1").header("X-API-KEY", "S3CR3T_K3Y")).andExpect(status().isNoContent());
+		mockMvc.perform(delete("/v1/product/1").header("X-API-KEY", "S3CR3T_K3Y_PR0DUCT_S3RV1C3")).andExpect(status().isNoContent());
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class ProductControllerTest {
 
 		when(productService.list(PageRequest.of(0, 10))).thenReturn(listResponse);
 
-		mockMvc.perform(get("/v1/product?page=0&size=10").header("X-API-KEY", "S3CR3T_K3Y")).andExpect(status().isOk())
+		mockMvc.perform(get("/v1/product?page=0&size=10").header("X-API-KEY", "S3CR3T_K3Y_PR0DUCT_S3RV1C3")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.data[0].data.attributes.name").value("Test Product"));
 	}
 }
