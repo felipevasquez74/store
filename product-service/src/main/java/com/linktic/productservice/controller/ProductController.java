@@ -1,7 +1,5 @@
 package com.linktic.productservice.controller;
 
-import java.util.Optional;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linktic.productservice.dto.ProductAttributes;
+import com.linktic.productservice.model.JsonApiListResponse;
 import com.linktic.productservice.model.JsonApiRequest;
 import com.linktic.productservice.model.JsonApiResponse;
 import com.linktic.productservice.service.IProductService;
@@ -40,25 +39,27 @@ public class ProductController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<JsonApiResponse<ProductAttributes>> getById(@PathVariable String id) {
-		Optional<JsonApiResponse<ProductAttributes>> dto = iProductService.getById(id);
-		return dto.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		JsonApiResponse<ProductAttributes> dto = iProductService.getById(id);
+		return ResponseEntity.ok(dto);
 	}
 
-	@PutMapping(value = "/{id}", consumes = MediaTypes.JSON_API_VALUE)
-	public ResponseEntity<JsonApiResponse<ProductAttributes>> update(@PathVariable String id,
+	@PutMapping("/{id}")
+	public ResponseEntity<JsonApiResponse<ProductAttributes>> updateProduct(@PathVariable String id,
 			@RequestBody JsonApiRequest<ProductAttributes> request) {
-		Optional<JsonApiResponse<ProductAttributes>> updated = iProductService.update(id, request);
-		return updated.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		JsonApiResponse<ProductAttributes> updatedProduct = iProductService.update(id,
+				request.getData().getAttributes());
+
+		return ResponseEntity.ok(updatedProduct);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable String id) {
+	public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
 		iProductService.delete(id);
-		return ResponseEntity.ok(null);
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping
-	public ResponseEntity<?> list(@RequestParam(defaultValue = "0") int page,
+	public ResponseEntity<JsonApiListResponse<ProductAttributes>> list(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
 		return ResponseEntity.ok(iProductService.list(PageRequest.of(page, size)));
 	}

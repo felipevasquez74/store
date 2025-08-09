@@ -2,10 +2,12 @@ package com.linktic.productservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "product")
 public class Product {
 	@Id
 	private String id;

@@ -1,7 +1,5 @@
 package com.linktic.productservice.model;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JsonApiListResponse<T> {
-	private List<JsonApiResponse<T>> data;
-	private MetaPage meta;
-	private Links links;
+public class Links {
+	private String self;
 }

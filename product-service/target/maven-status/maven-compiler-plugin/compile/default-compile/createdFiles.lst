@@ -1,7 +1,8 @@
 com/linktic/productservice/service/IProductService.class
 com/linktic/productservice/model/JsonApiListResponse.class
 com/linktic/productservice/model/JsonApiRequest.class
-com/linktic/productservice/service/ProductServiceImpl.class
+com/linktic/productservice/config/MDCInterceptor.class
+com/linktic/productservice/model/MetaPage.class
 com/linktic/productservice/model/JsonApiResponse.class
 com/linktic/productservice/model/JsonApiData.class
 com/linktic/productservice/model/JsonApiRequest$JsonApiData.class
@@ -12,3 +13,5 @@ com/linktic/productservice/controller/ProductController.class
 com/linktic/productservice/entity/Product.class
 com/linktic/productservice/dto/ProductDto.class
 com/linktic/productservice/model/JsonApiResponse$JsonApiData.class
+com/linktic/productservice/config/WebConfig.class
+com/linktic/productservice/model/Links.class

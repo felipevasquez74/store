@@ -1,4 +1,6 @@
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/ProductServiceApplication.java
+/home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/config/MDCInterceptor.java
+/home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/config/WebConfig.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/controller/ProductController.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/dto/ProductAttributes.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/dto/ProductDto.java
@@ -7,6 +9,9 @@
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/model/JsonApiListResponse.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/model/JsonApiRequest.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/model/JsonApiResponse.java
+/home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/model/Links.java
+/home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/model/MetaPage.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/repository/ProductRepository.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/service/IProductService.java
 /home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/service/ProductServiceImpl.java
+/home/avasquez/eclipse-workspace/store/product-service/src/main/java/com/linktic/productservice/util/ProductMapper.java
