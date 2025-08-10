@@ -16,6 +16,8 @@ import com.toedter.spring.hateoas.jsonapi.MediaTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping(path = "/v1/inventory", produces = MediaTypes.JSON_API_VALUE)
@@ -33,7 +35,8 @@ public class InventoryController {
 	@ApiResponse(responseCode = "200", description = "Product found")
 	@ApiResponse(responseCode = "404", description = "Product not found")
 	@GetMapping("/{productId}")
-	public ResponseEntity<InventoryJsonApiResponse> getQuantity(@PathVariable String productId) {
+	public ResponseEntity<InventoryJsonApiResponse> getQuantity(
+			@PathVariable @NotBlank(message = "Product ID is required") String productId) {
 		return ResponseEntity.ok(iInventoryService.getInventoryByProductId(productId));
 	}
 
@@ -41,8 +44,9 @@ public class InventoryController {
 	@ApiResponse(responseCode = "200", description = "Product quantity update successfully")
 	@ApiResponse(responseCode = "400", description = "Invalid input data")
 	@PostMapping(path = "/{productId}/purchase")
-	public ResponseEntity<InventoryJsonApiResponse> updateAfterPurchase(@PathVariable String productId,
-			@RequestParam int quantity) {
+	public ResponseEntity<InventoryJsonApiResponse> updateAfterPurchase(
+			@PathVariable @NotBlank(message = "Product ID is required") String productId,
+			@RequestParam @Min(value = 1, message = "Quantity size must be >= 1") Integer quantity) {
 		return ResponseEntity.ok(iInventoryService.updateQuantityAfterPurchase(productId, quantity));
 	}
 }

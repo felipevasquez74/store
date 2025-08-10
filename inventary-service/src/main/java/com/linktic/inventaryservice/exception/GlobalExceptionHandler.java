@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +27,15 @@ public class GlobalExceptionHandler {
 		ErrorResponse errorResponse = new ErrorResponse(
 				List.of(new ErrorObject("400", "Bad Request", ex.getMessage())));
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+		List<ErrorObject> errors = ex.getConstraintViolations().stream()
+				.map(cv -> new ErrorObject("400", "Bad Request", cv.getPropertyPath() + ": " + cv.getMessage()))
+				.toList();
+		return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(Exception.class)

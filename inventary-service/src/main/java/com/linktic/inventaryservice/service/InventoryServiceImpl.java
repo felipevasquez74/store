@@ -74,10 +74,14 @@ public class InventoryServiceImpl implements IInventoryService {
 
 	@Transactional
 	@Override
-	public InventoryJsonApiResponse updateQuantityAfterPurchase(String productId, int quantityToDeduct) {
+	public InventoryJsonApiResponse updateQuantityAfterPurchase(String productId, Integer quantityToDeduct) {
 		MDCLoggingFilter.builderMDC();
 
 		log.info("Request received to deduct quantity={} from inventory for productId={}", quantityToDeduct, productId);
+
+		if (quantityToDeduct == null || quantityToDeduct < 1) {
+			throw new IllegalArgumentException("Quantity must be >= 1");
+		}
 
 		Inventory inventory = repository.findById(productId).orElseThrow(() -> {
 			log.warn("Inventory not found when updating for productId={}", productId);
