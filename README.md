@@ -271,7 +271,7 @@ Para garantizar la trazabilidad de cada petición a través de los microservicio
   - Generar un `spanId` único por request HTTP entrante.
   - Añadir automáticamente este `spanId` a cada log generado durante el ciclo de vida de la petición.
 
-### 3. Ejemplo de log con `traceId`
+### 3. Ejemplo de log con `spanId`
 ```text
 2025-08-10 20:13:49.747 [23a7a636-1779-44e7-a9c7-1d7b705747eb] INFO  c.l.i.service.InventoryServiceImpl - Request received to get inventory and product info for productId=373e9c0a-97a3-4c0d-ae8c-27f4a1035f5f
 ```
