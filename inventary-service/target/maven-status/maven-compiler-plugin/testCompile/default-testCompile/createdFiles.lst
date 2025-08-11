@@ -1,0 +1,5 @@
+com/linktic/inventaryservice/controller/InventoryControllerTest.class
+com/linktic/inventaryservice/integration/InventoryRepositoryIntegrationTest.class
+com/linktic/inventaryservice/util/TimeoutRetryerTest.class
+com/linktic/inventaryservice/service/InventoryServiceImplTest.class
+com/linktic/inventaryservice/integration/ProductClientIntegrationTest.class

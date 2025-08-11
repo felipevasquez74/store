@@ -1,0 +1,3 @@
+com/linktic/productservice/service/ProductServiceImplTest.class
+com/linktic/productservice/exception/GlobalExceptionHandlerTest.class
+com/linktic/productservice/controller/ProductControllerTest.class
