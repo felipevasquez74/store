@@ -147,6 +147,8 @@ Cada microservicio expone su propia documentación interactiva con **Swagger UI*
 
 ---
 
+
+
 ## 📬 Colección de Postman
 
 Para facilitar las pruebas de los endpoints, se incluye una colección de Postman.
@@ -162,13 +164,83 @@ Para facilitar las pruebas de los endpoints, se incluye una colección de Postma
 
 ---
 
-## 🔑 Autenticación con API Key
+## 📦 Estructura del API
 
-Cada microservicio requiere un **X-API-KEY** para acceder a sus endpoints.
+El API sigue el estándar [JSON:API](https://jsonapi.org/) para estructurar las peticiones y respuestas.  
+Esto permite mantener un formato consistente y fácilmente integrable.
 
-Estas claves se envian commo header en cada peticion.
+### 🔑 Autenticación
+Todas las peticiones deben incluir la cabecera con la **API Key** correspondiente al microservicio:
 
-Los **X-API-KEY** fueron compartidos en el correo electronico.
+```bash
+--header 'X-API-KEY: <API_KEY>'
+```
+
+### 📄 Ejemplo de petición (GET Product)
+
+Request:
+
+```bash
+curl --location 'http://localhost:8080/v1/product/550e8400-e29b-41d4-a716-446655440002' \
+--header 'Accept: application/vnd.api+json' \
+--header 'X-API-KEY: <API_KEY>'
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "type": "products",
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "attributes": {
+      "name": "Teclado Mecánico Keychron K2",
+      "price": 895
+    }
+  }
+}
+
+```
+
+### 📄 Ejemplo de respuesta con relaciones (Inventario y Producto)
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "type": "inventories",
+    "attributes": {
+      "quantity": 10
+    },
+    "relationships": {
+      "product": {
+        "data": {
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "type": "products"
+        }
+      }
+    }
+  },
+  "included": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "type": "products",
+      "attributes": {
+        "name": "Laptop Dell XPS 13",
+        "price": 1200
+      }
+    }
+  ]
+}
+```
+
+###📌 Notas:
+
+-attributes contiene la información principal de la entidad.
+
+-relationships define relaciones con otras entidades.
+
+-included trae datos relacionados para evitar múltiples llamadas al API.
 
 ---
 
