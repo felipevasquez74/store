@@ -133,3 +133,17 @@ Cada microservicio expone su propia documentación interactiva con **Swagger UI*
 
 > 💡 Puedes abrirlos en el navegador mientras el servicio esté ejecutándose para probar los endpoints directamente.
 
+## 📬 Colección de Postman
+
+Para facilitar las pruebas de los endpoints, se incluye una colección de Postman.
+
+- Archivo: [`product_inventory_collection.json`](docs/postman/product_inventory_collection.json)
+- Cómo usar:
+  1. Abrir Postman.
+  2. Ir a **Import**.
+  3. Seleccionar el archivo `.json` de la colección.
+  4. Probar los endpoints usando los entornos adecuados.
+
+> 💡 Incluye tanto el **Product Service** como el **Inventory Service** con las rutas documentadas en Swagger.
+
+
