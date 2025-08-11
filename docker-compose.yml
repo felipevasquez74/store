@@ -49,6 +49,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/store_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
+      PRODUCT_SERVICE_URL: http://product-service:8080/v1/product
     depends_on:
       mysql-db:
         condition: service_healthy

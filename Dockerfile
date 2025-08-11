@@ -8,5 +8,5 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 ARG SERVICE
 COPY --from=build /app/${SERVICE}/target/*.jar app.jar
-EXPOSE 8080
+EXPOSE 8080 8081
 ENTRYPOINT ["java", "-jar", "app.jar"]
