@@ -1,35 +1,135 @@
-## Decisión sobre la Base de Datos
+# 🏪 Store App
 
-Para esta solución, se eligió una base de datos relacional SQL, específicamente **MYSQL**, para ambos microservicios.  
+Este proyecto está compuesto por **dos microservicios**:
 
-### Justificación de la elección
+```text
+| Microservicio         | Descripción                 |
+|-----------------------|-----------------------------|
+| **product-service**   | Gestión de productos        |
+| **inventary-service** | Gestión de inventario       |
+```
 
-1. Relación clara entre entidades
-   - El microservicio de Inventario depende de `producto_id`, que referencia a un producto en el microservicio de Productos.  
-   - Aunque las tablas sean independientes, el modelo relacional se adapta perfectamente a este tipo de relación y asegura integridad lógica.
-
-2. Consultas estructuradas y transacciones
-   - Se requiere paginación eficiente, consultas por ID y actualizaciones atómicas.  
-   - MYSQL ofrece soporte robusto para transacciones y operaciones seguras en entornos concurrentes.
-
-3. Madurez y ecosistema 
-   - MYSQL cuenta con un ecosistema maduro, integración fluida con ORMs (Hibernate, JPA, etc.) y soporte completo para migraciones.
-   - Fácil de contenerizar con Docker y compatible con entornos CI/CD.
-
-4. Escalabilidad y mantenibilidad
-   - MYSQL permite escalar horizontal y verticalmente, soportando réplicas, particionamiento y optimización de consultas.
-   - Ideal para crecer con el sistema manteniendo consistencia fuerte.
-
-5. Alternativas evaluadas 
-   - **NoSQL** (MongoDB): más adecuadas para datos no estructurados o esquemas variables. Aquí el esquema es fijo y relacional.  
-   - **En memoria** (Redis): excelente para *cache* o pruebas rápidas, pero no garantiza persistencia como almacenamiento primario.
+Ambos están contenidos dentro de un proyecto **multi-módulo Maven** llamado `store`.
 
 ---
 
-**Arquitectura propuesta:**
+## 📂 Estructura del proyecto
 
-- **Microservicio de Productos** → MYSQL (`product`: `id`, `name`, `price`)
-- **Microservicio de Inventario** → MYSQL (`inventary`: `product_id`, `quantity`)
-- Comunicación entre microservicios vía **HTTP JSON API** con autenticación por API Key.
-- Integridad de datos validada a nivel de aplicación.
+```text
+store/
+├── pom.xml               # POM padre (configuración y dependencias comunes)
+├── product-service/      # Servicio de productos
+│   └── pom.xml
+└── inventary-service/    # Servicio de inventario
+    └── pom.xml
+```
+
+---
+
+## 🛠 Tecnologías utilizadas
+
+- **Java** 21  
+- **Spring Boot** 3.3.4  
+- **Spring Data JPA**  
+- **Spring Web MVC**  
+- **Spring Cloud** 2023.0.3  
+- **Feign Client** para comunicación entre microservicios  
+- **MySQL** como base de datos  
+- **Lombok** para reducir código *boilerplate*  
+- **Spring HATEOAS JSON:API** para hipermedia  
+- **SpringDoc OpenAPI** para documentación de API  
+- **JUnit 5**, **Mockito**, **Testcontainers**, **WireMock** para pruebas  
+
+---
+
+## 📦 Módulos
+
+```text
+| Módulo                | Descripción                                                                                                                                      |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| store (POM padre)     | Define versiones, dependencias y configuración común de Spring Boot y Spring Cloud. Incluye JPA, Web, MySQL, HATEOAS, OpenAPI y plugins comunes. |
+| product-service       | Microservicio REST para gestión de productos. Hereda configuración del POM padre.                                                                |
+| inventary-service     | Microservicio REST para gestión de inventario. Se comunica con product-service vía Feign Client.                                                 |
+```
+
+---
+
+# ▶️ Ejecución en modo local
+
+
+#### Clonar repositorio
+```bash
+git clone https://github.com/felipevasquez74/store.git
+cd store
+```
+
+#### Compilar y empaquetar
+```bash
+mvn clean install
+```
+
+#### Levantar base de datos MySQL en Docker
+```bash
+docker run --name mi-mysql \
+  -e MYSQL_ROOT_PASSWORD=admin \
+  -e MYSQL_USER=admin \
+  -e MYSQL_PASSWORD=admin \
+  -e MYSQL_DATABASE=store_db \
+  -p 3306:3306 \
+  -d mysql:8.0
+```
+
+#### Ejecutar microservicios
+```bash
+cd product-service
+mvn spring-boot:run
+```
+
+```bash
+cd ../inventary-service
+mvn spring-boot:run
+```
+
+# ▶️ Ejecución con Docker Compose
+
+#### Clonar repositorio
+```bash
+git clone https://github.com/felipevasquez74/store.git
+cd store
+```
+
+#### Ejecutar docker-compose.yml
+```bash
+docker compose up --build
+
+docker ps
+
+```
+
+Debes ver algo asi 
+
+```text
+CONTAINER ID   IMAGE                 COMMAND                  STATUS         PORTS
+xxxxx          product-service       "java -jar app.jar"      Up 2 minutes   0.0.0.0:8080->8080/tcp
+yyyyy          inventary-service     "java -jar app.jar"      Up 2 minutes   0.0.0.0:8081->8080/tcp
+zzzzz          mysql:8.0             "docker-entrypoint.s…"   Up 2 minutes   0.0.0.0:3306->3306/tcp
+```
+Acceder a los microservicios
+
+Product Service → http://localhost:8080
+Inventary Service → http://localhost:8081
+
+## 📖 Documentación de APIs (Swagger)
+
+Cada microservicio expone su propia documentación interactiva con **Swagger UI**.
+
+- **Product Service**  
+  URL: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)  
+  Puerto: `8080`
+
+- **Inventory Service**  
+  URL: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)  
+  Puerto: `8081`
+
+> 💡 Puedes abrirlos en el navegador mientras el servicio esté ejecutándose para probar los endpoints directamente.
 
